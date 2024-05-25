@@ -1,6 +1,5 @@
 .env
 .config.env
 static
-samples
 media
 __pycache__

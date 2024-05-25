@@ -30,7 +30,7 @@ async def insert_new_document(title: str, file: UploadFile):
     path = f"{uid}_{filename}"
     with open(os.path.join(settings.BASE_DIR, settings.MEDIA, path), 'wb') as f:
         f.write(content)
-    index.upsert([(uid, embedding.tolist(), {"title": title, "path": path, "filename": file.filename})])
+    index.upsert([(uid, embedding.tolist(), {"title": title, "path": path})])
 
 
 async def get_results(query_text):

@@ -12,15 +12,6 @@ from config import settings
 app = FastAPI()
 
 
-UPLOAD_DIRECTORY = "./static"
-if not os.path.exists(UPLOAD_DIRECTORY):
-    os.makedirs(UPLOAD_DIRECTORY)
-
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World!"}
-
 # TODO: replace "search" with "docs"
 @app.get("/search")
 async def search(query: str):
@@ -67,14 +58,16 @@ async def insert_all_pdfs_to_pinecone():
     # automatically to find case studies and will be saved in pdf format.
 
     media_dir = os.path.join(settings.BASE_DIR, settings.MEDIA)
+    index = pinecone_index()
+    index.delete(delete_all=True)
     if not os.path.exists(media_dir):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
             detail="Directory does not exists"
             )
-    for filename in os.listdir(media_dir):
+    for filename in os.listdir(os.path.join(settings.BASE_DIR, 'samples')):
         if filename.endswith('.pdf'):
-            content = read_pdf(os.path.join(media_dir, filename))
+            content = read_pdf(os.path.join(settings.BASE_DIR, 'samples', filename))
             title = ""
             pos = content.index('Industry:')
             title = content[:pos]
@@ -82,9 +75,8 @@ async def insert_all_pdfs_to_pinecone():
             
             content = content.replace('\n', ' ') # NOTE: this should be done before extracting title
             embedding = generate_embeddings(content)
-            index = pinecone_index()
             uid = str(uuid4())
             fname = filename.split('_')[-1]
             path = f"{uid}_{fname}"
             text_to_pdf(content, os.path.join(media_dir, path))
-            index.upsert([(uid, embedding.tolist(), {"title": title, "path": path, "filename": filename})])
+            index.upsert([(uid, embedding.tolist(), {"title": title, "path": path})])
