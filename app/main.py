@@ -4,6 +4,7 @@ from fastapi.responses import FileResponse
 import os
 
 
+from app.metadata import extract_metadata
 from app.utils.data_cleaner import read_pdf, text_to_pdf
 from app.pinecone import pinecone_index
 from app.semantic_search import generate_embeddings, get_results, insert_new_document
@@ -74,9 +75,11 @@ async def insert_all_pdfs_to_pinecone():
             title = title.replace('\n', '')
             
             content = content.replace('\n', ' ') # NOTE: this should be done before extracting title
+            industry, use_case, geography = extract_metadata(content)
             embedding = generate_embeddings(content)
             uid = str(uuid4())
             fname = filename.split('_')[-1]
             path = f"{uid}_{fname}"
             text_to_pdf(content, os.path.join(media_dir, path))
-            index.upsert([(uid, embedding.tolist(), {"title": title, "path": path})])
+            index.upsert([(uid, embedding.tolist(), {"title": title, "filename": path, "industry": industry, "geography": geography, "use_case": use_case})])
+            

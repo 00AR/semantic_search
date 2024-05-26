@@ -44,18 +44,20 @@ To setup the project on your local machine, do the following
     ```
 ## APIs
 ![apis](images/apis.png)
+- A record in pinecone index
+![record](images/pinecone_record.png)
 ## Working
+The project is built using fastapi. It uses Pinecone Vector database for storing embeddings along with metadata for each case study. Metadata of a case study includes `industry`, `use case` and `geography`.
 ### `/search` endpoint
-The project is built using fastapi. It uses Pinecone Vector database for storing embeddings.
 When the user enters a search term on `/search` endpoint, the query is converted into an embedding.
 The embedding is then matched with the embeddings of the case studies using cosine similarity that are stored in pinecone.
-The best matches are returned as response. The response includes a `title` and `path`. 
+The best matches are returned as response. The response includes a `title` and `filename`. 
 ### `/upload` endpoint
 User can upload a case study file in pdf format through `/upload` endpoint.
 ### `/media/{filename}` endpoint
-Additionally user can download the case of interest from `/media/{filename}` endpoint. The `path` from the search results of `/search` must supplied as filename to this endpoint.
+Additionally user can download the case of interest from `/media/{filename}` endpoint. The `filename` from the search results of `/search` must supplied as filename to this endpoint.
 ### `/generate_db` endpoint
-This will regenerate the embeddings and store them on an empty pinecone database index. It uses case studies stored in `samples` folder. `samples` store one pdf per one case study.
+This will regenerate the embeddings and metadata for each case study and store them on an empty pinecone database index. It uses case studies stored in `samples` folder. `samples` store one pdf per one case study.
 
 ## Deployment
 The app is deloyed in a docker container at [huggingface](huggingface.co).
@@ -63,5 +65,5 @@ The app is deloyed in a docker container at [huggingface](huggingface.co).
 [Deployment Link](https://abdul-rafey-semantic-search.hf.space)
 
 ## TODO
-- Extract industry, use-case, etc metadata from each case study and store it on pinecone index along with embeddings
-- Extract similar metadata from user search query and filter results according to it.
+- [x] Extract industry, use-case, etc metadata from each case study and store it on pinecone index along with embeddings
+- [x] Extract similar metadata from user search query and filter results according to it.
