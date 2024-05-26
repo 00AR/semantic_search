@@ -61,3 +61,7 @@ This will regenerate the embeddings and store them on an empty pinecone database
 The app is deloyed in a docker container at [huggingface](huggingface.co).
 
 [Deployment Link](https://abdul-rafey-semantic-search.hf.space)
+
+## TODO
+- Extract industry, use-case, etc metadata from each case study and store it on pinecone index along with embeddings
+- Extract similar metadata from user search query and filter results according to it.
