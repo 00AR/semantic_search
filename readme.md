@@ -8,8 +8,7 @@ namely, Pinecone.
 To setup the project on your local machine, do the following
 - Clone the repo
     ```bash
-    git clone repo_link
-    cd semantic_search
+    git clone https://github.com/00AR/semantic_search.git && cd semantic_search
     ```
 - Make a python virtual environment
     ```bash
@@ -24,7 +23,7 @@ To setup the project on your local machine, do the following
     pip install -r requirements.txt
     ```
 - Setup Environment Variables
-    - Create a new file named `.config.env` and add the following:
+    - Create a new file named `.config.env` and add the following environment variables with required values:
         ```bash
         BASE_DIR=/path/to/the/repo/semantic_search
         MEDIA=media
@@ -34,7 +33,7 @@ To setup the project on your local machine, do the following
     ```bash
     uvicorn app.main:app
     ```
-### Setup using docker file Docker(**Note**: use sudo incase of permission denied error):
+### Setup using Docker(**Note**: consider using sudo in case of permission denied error):
 - build the image using 
     ```bash
     docker build -t semantic-search-app .
@@ -57,3 +56,8 @@ User can upload a case study file in pdf format through `/upload` endpoint.
 Additionally user can download the case of interest from `/media/{filename}` endpoint. The `path` from the search results of `/search` must supplied as filename to this endpoint.
 ### `/generate_db` endpoint
 This will regenerate the embeddings and store them on an empty pinecone database index. It uses case studies stored in `samples` folder. `samples` store one pdf per one case study.
+
+## Deployment
+The app is deloyed in a docker container at [huggingface](huggingface.co).
+
+[Deployment Link](https://abdul-rafey-semantic-search.hf.space)
